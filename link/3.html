@@ -1,55 +1,293 @@
-﻿<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="../css/sptx.css">
-        <section class="main">
-                <div class="box">
-<a href="../yxmb/12/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y12.png" alt=" Coding"> 飞机大战</div>
-<div class="desc">JS飞机大战网页版小游戏，鼠标控制战机攻击敌人</div></div></a>
-
-<a href="../yxmb/15/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y15.png" alt=" Coding"> 射击鸭子</div>
-<div class="desc">HTML5 canvas射击鸭子小游戏</div></div></a>
-
-<a href="../yxmb/20/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y20.png" alt=" Coding"> 打砖块射击</div>
-<div class="desc">HTML5 canvas打砖块射击小游戏，颜色爆炸射击游戏</div></div></a>
-
-<a href="../yxmb/21/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y21.png" alt=" Coding"> 保卫星球射击</div>
-<div class="desc">星球防御游戏，太空战机为阻止星球遭遇小行星撞击</div></div></a>
-
-<a href="../yxmb/30/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y30.png" alt=" Coding"> 射箭小游戏</div>
-<div class="desc">TweenMax.min.js制作，鼠标控制射箭游戏，画一个箭头并发射它</div></div></a>
-
-<a href="../yxmb/31/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y31.png" alt=" Coding"> 飞机大战2.0</div>
-<div class="desc">飞机大战小游戏，电脑和手机都可以玩，飞机自动发射子弹</div></div></a>
-
-<a href="../yxmb/66/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y66.png" alt=" Coding"> 经典飞机大战</div>
-<div class="desc">经典飞机大战是一款JS模仿微信打飞机游戏</div></div></a>
-
-<a href="../yxmb/77/index.html" target="_blank">
-<div class="item"><div class="logo">
-<img src="../images/y77.png" alt=" Coding"> 飞机加减速</div>
-<div class="desc">一款基于HTML5 Canvas实现的小游戏，圆形的加速，方形减速（手机端更好）</div></div></a>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>射击游戏 - 小游戏平台</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #8b5cf6;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+            background-color: var(--gray-50);
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .game-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            text-decoration: none;
+            display: block;
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .game-card:nth-child(1) { animation-delay: 0.02s; }
+        .game-card:nth-child(2) { animation-delay: 0.04s; }
+        .game-card:nth-child(3) { animation-delay: 0.06s; }
+        .game-card:nth-child(4) { animation-delay: 0.08s; }
+        .game-card:nth-child(5) { animation-delay: 0.1s; }
+        .game-card:nth-child(n+6) { animation-delay: 0.12s; }
+        .game-cover {
+            width: 100%;
+            height: 130px;
+            overflow: hidden;
+            background-color: var(--gray-100);
+        }
+        .game-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        .game-info {
+            padding: 14px;
+        }
+        .game-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .game-desc {
+            font-size: 13px;
+            color: var(--gray-500);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+        }
+        .game-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+        }
+        .game-card:hover .game-cover img {
+            transform: scale(1.08);
+        }
+        .game-card:hover .game-name {
+            color: var(--primary);
+        }
+        .game-card.hidden {
+            display: none;
+        }
+        .empty-tip {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+            font-size: 15px;
+            display: none;
+        }
+        .empty-tip.show {
+            display: block;
+        }
+        .empty-tip i {
+            font-size: 40px;
+            color: var(--gray-300);
+            margin-bottom: 12px;
+            display: block;
+        }
+        @media (max-width: 992px) {
+            .game-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 16px;
+            }
+            .game-cover {
+                height: 110px;
+            }
+            .game-info {
+                padding: 12px;
+            }
+        }
+        @media (max-width: 576px) {
+            body {
+                padding: 12px;
+            }
+            .game-grid {
+                grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+                gap: 12px;
+            }
+            .game-cover {
+                height: 100px;
+            }
+            .game-info {
+                padding: 10px;
+            }
+            .game-name {
+                font-size: 14px;
+            }
+            .game-desc {
+                font-size: 12px;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+    <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-grid" id="gameGrid">
+            <a href="../yxmb/12/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y12.png" alt="飞机大战">
                 </div>
-                <div class="box">
+                <div class="game-info">
+                    <h3 class="game-name">飞机大战</h3>
+                    <p class="game-desc">JS飞机大战网页版小游戏，鼠标控制战机攻击敌人</p>
                 </div>
-        </section>
- 
+            </a>
+            <a href="../yxmb/15/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y15.png" alt="射击鸭子">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">射击鸭子</h3>
+                    <p class="game-desc">HTML5 canvas射击鸭子小游戏</p>
+                </div>
+            </a>
+            <a href="../yxmb/20/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y20.png" alt="打砖块射击">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">打砖块射击</h3>
+                    <p class="game-desc">HTML5 canvas打砖块射击小游戏，颜色爆炸射击游戏</p>
+                </div>
+            </a>
+            <a href="../yxmb/21/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y21.png" alt="保卫星球射击">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">保卫星球射击</h3>
+                    <p class="game-desc">星球防御游戏，太空战机为阻止星球遭遇小行星撞击</p>
+                </div>
+            </a>
+            <a href="../yxmb/30/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y30.png" alt="射箭小游戏">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">射箭小游戏</h3>
+                    <p class="game-desc">TweenMax.min.js制作，鼠标控制射箭游戏，画一个箭头并发射它</p>
+                </div>
+            </a>
+            <a href="../yxmb/31/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y31.png" alt="飞机大战2.0">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">飞机大战2.0</h3>
+                    <p class="game-desc">飞机大战小游戏，电脑和手机都可以玩，飞机自动发射子弹</p>
+                </div>
+            </a>
+            <a href="../yxmb/66/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y66.png" alt="经典飞机大战">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">经典飞机大战</h3>
+                    <p class="game-desc">经典飞机大战是一款JS模仿微信打飞机游戏</p>
+                </div>
+            </a>
+            <a href="../yxmb/77/index.html" target="_blank" class="game-card">
+                <div class="game-cover">
+                    <img src="../images/y77.png" alt="飞机加减速">
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">飞机加减速</h3>
+                    <p class="game-desc">一款基于HTML5 Canvas实现的小游戏，圆形的加速，方形减速（手机端更好）</p>
+                </div>
+            </a>
+        </div>
+        <div class="empty-tip" id="emptyTip">
+            <i class="fa fa-search"></i>
+            没有找到相关游戏，换个关键词试试吧
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener("message", function(e){
+            if(e.data.type === "search"){
+                const keyword = e.data.keyword.toLowerCase().trim();
+                const gameCards = document.querySelectorAll(".game-card");
+                let hasResult = false;
+
+                gameCards.forEach(card => {
+                    const gameName = card.querySelector(".game-name").textContent.toLowerCase();
+                    const gameDesc = card.querySelector(".game-desc").textContent.toLowerCase();
+                    if(gameName.includes(keyword) || gameDesc.includes(keyword)){
+                        card.classList.remove("hidden");
+                        hasResult = true;
+                    }else{
+                        card.classList.add("hidden");
+                    }
+                });
+
+                const emptyTip = document.getElementById("emptyTip");
+                if(hasResult || keyword === ""){
+                    emptyTip.classList.remove("show");
+                }else{
+                    emptyTip.classList.add("show");
+                }
+            }
+        });
+    </script>
 </body>
 </html>
